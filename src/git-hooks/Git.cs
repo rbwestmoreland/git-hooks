@@ -60,6 +60,25 @@ namespace GitHooks
             return path;
         }
 
+        public static string GetConfig(string key)
+        {
+            var value = default(string);
+
+            try
+            {
+                Process.StartInfo.Arguments = $"config {key}";
+                Process.Start();
+                value = Process.StandardOutput.ReadToEnd().Trim();
+                Process.WaitForExit();
+            }
+            catch
+            {
+                // ignored
+            }
+
+            return value;
+        }
+
         public static void SetConfig(string key, string value)
         {
             try

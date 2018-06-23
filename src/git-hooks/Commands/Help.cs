@@ -8,7 +8,7 @@ namespace GitHooks.Commands
         public bool IsMatch(Context context)
         {
             var option = context.Args.ElementAtOrDefault(0);
-            var expected = new[] { "help", "?" };
+            var expected = new[] { "help", "--help", "?", "-?" };
             return expected.Any(v => string.Equals(v, option, StringComparison.OrdinalIgnoreCase));
         }
 
@@ -20,6 +20,7 @@ namespace GitHooks.Commands
             Output.WriteLine("   help             Display all available commands");
             Output.WriteLine("   install          Install git hooks in the current repository");
             Output.WriteLine("   uninstall        Uninstall git hooks from the current repository");
+            Output.WriteLine("   list             List installed git hooks");
             Output.WriteLine("   run              Run a specific git hook");
             Output.WriteLine("");
             return 0;

@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 
 namespace GitHooks.Commands
@@ -25,12 +23,12 @@ namespace GitHooks.Commands
 
             foreach (var hook in Git.GetHooks())
             {
-                foreach (var file in GetRepositoryHooks(hook))
+                foreach (var file in Paths.Hooks.GetRepositoryFiles(hook, Paths.Format.Relative))
                 {
                     Output.WriteLine($"[{hook}] {file}");
                 }
 
-                foreach (var file in GetUserHooks(hook))
+                foreach (var file in Paths.Hooks.GetUserProfileFiles(hook, Paths.Format.Relative))
                 {
                     Output.WriteLine($"[{hook}] {file}");
                 }
@@ -41,34 +39,6 @@ namespace GitHooks.Commands
             return 0;
         }
 
-        private static IEnumerable<string> GetRepositoryHooks(string hook)
-        {
-            var gitRoot = Paths.Environment.GetGitRootPath();
-            var directory = Paths.Hooks.GetRepositoryPath();
-            var subfolder = Path.Combine(directory, hook);
 
-            if (!Directory.Exists(subfolder))
-                yield break;
-
-            foreach (var file in Directory.EnumerateFiles(subfolder))
-            {
-                yield return file.Replace(gitRoot, ".");
-            }
-        }
-
-        private static IEnumerable<string> GetUserHooks(string hook)
-        {
-            var userProfile = Paths.Environment.GetUserProfilePath();
-            var directory = Paths.Hooks.GetUserProfilePath();
-            var subfolder = Path.Combine(directory, hook);
-
-            if (!Directory.Exists(subfolder))
-                yield break;
-
-            foreach (var file in Directory.EnumerateFiles(subfolder))
-            {
-                yield return file.Replace(userProfile, "~");
-            }
-        }
     }
 }
