@@ -1,0 +1,13 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>netcoreapp2.1</TargetFramework>
+    <RootNamespace>GitHooks</RootNamespace>
+    <Authors>Bates Westmoreland</Authors>
+    <Version>0.0.1</Version>
+    <Company>Bates Westmoreland</Company>
+    <Copyright>Bates Westmoreland © 2018</Copyright>
+  </PropertyGroup>
+
+</Project>
