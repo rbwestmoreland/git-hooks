@@ -6,7 +6,7 @@ if (!$PSScriptRoot) { $PSScriptRoot = Split-Path $script:MyInvocation.MyCommand.
 
 # vars
 $version = Get-ProjectVersion
-$zipFile = ".\artifacts\v$version\git-hooks-v$version-win-x64.zip"
+$zipFile = "$PSScriptRoot\artifacts\v$version\git-hooks-v$version-win-x64.zip"
 
 # uninstall and install
 $installationFolder = Join-Path $env:ProgramData "rbwestmoreland\git-hooks\v$version"

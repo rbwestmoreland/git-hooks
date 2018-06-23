@@ -1,5 +1,5 @@
-﻿using System;
-using System.Diagnostics;
+﻿using GitHooks.Commands;
+using System.Linq;
 
 namespace GitHooks
 {
@@ -9,24 +9,15 @@ namespace GitHooks
         {
             var context = new Context(args);
             var exitCode = Execute(context);
-
-            if (Debugger.IsAttached)
-                Debugger.Break();
-
             return exitCode;
         }
 
         private static int Execute(Context context)
         {
-            switch (context.Command)
-            {
-                case "--version":
-                    Console.WriteLine($"git-hooks {context.Version}");
-                    return 0;
-                default:
-                    Console.WriteLine("unknown command");
-                    return 1;
-            }
+            var commands = new ICommand[] { new Version(), new Help(), new Install(), new Uninstall(), new Run(), new List() };
+            var command = commands.FirstOrDefault(c => c.IsMatch(context)) ?? new Unknown();
+            var exitCode = command.Execute(context);
+            return exitCode;
         }
     }
 }

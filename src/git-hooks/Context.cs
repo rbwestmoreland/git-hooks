@@ -1,13 +1,14 @@
 ﻿namespace GitHooks
 {
-    public class Context
+    internal class Context
     {
         public string Version { get; }
-        public string Command { get; }
+        public string[] Args { get; }
 
         public Context(string[] args)
         {
             Version = GetSemVer();
+            Args = args ?? new string[0];
         }
 
         private static string GetSemVer()
