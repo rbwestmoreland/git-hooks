@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Diagnostics;
 using System.Linq;
 
 namespace GitHooks.Commands
@@ -14,32 +13,31 @@ namespace GitHooks.Commands
 
         public int Execute(Context context)
         {
+            var exit = 0;
             var hook = context.Args.ElementAtOrDefault(1);
             var args = context.Args.ElementAtOrDefault(2);
-            var repositoryHooks = Paths.Hooks.GetRepositoryFiles(hook, Paths.Format.Absolute);
-            var userProfileHooks = Paths.Hooks.GetRepositoryFiles(hook, Paths.Format.Absolute);
-
-            Output.WriteLine("");
-            Output.WriteLine($"Hook: {hook}");
-            Output.WriteLine($"Args: {args}");
-            Output.WriteLine($"Path: {Environment.CurrentDirectory}");
-
-            //var process = new Process
-            //{
-            //    StartInfo = new ProcessStartInfo
-            //    {
-            //        UseShellExecute = false,
-            //        RedirectStandardOutput = true,
-            //        FileName = "git",
-            //        CreateNoWindow = false,
-            //        WorkingDirectory = Environment.CurrentDirectory
-            //    }
-            //};
-
 
             Output.WriteLine("");
 
-            return 0;
+            foreach (var file in Paths.Hooks.GetRepositoryFiles(hook, Paths.Format.Absolute))
+            {
+                exit = Math.Max(exit, ExecuteHook(file, args));
+            }
+
+            foreach (var file in Paths.Hooks.GetUserProfileFiles(hook, Paths.Format.Absolute))
+            {
+                exit = Math.Max(exit, ExecuteHook(file, args));
+            }
+
+            return exit;
+        }
+
+        private static int ExecuteHook(string file, string args)
+        {
+            Output.WriteLine($"[{file}]");
+            var exitCode = Bash.ExecuteScript(file, args, Output.WriteLine);
+            Output.WriteLine("");
+            return exitCode;
         }
     }
 }

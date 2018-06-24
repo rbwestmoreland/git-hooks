@@ -29,7 +29,7 @@ namespace GitHooks
             public static string GetRepositoryPath()
             {
                 var gitRoot = Git.GetRootPath();
-                var path = Path.Combine(gitRoot, ".git", "githooks");
+                var path = Path.Combine(gitRoot, ".git", ".githooks");
                 return path;
             }
         }

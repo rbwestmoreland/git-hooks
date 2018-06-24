@@ -13,13 +13,38 @@ namespace GitHooks
             {
                 StartInfo = new ProcessStartInfo
                 {
-                    UseShellExecute = false,
-                    RedirectStandardOutput = true,
+                    CreateNoWindow = true,
+                    ErrorDialog = false,
                     FileName = "git",
-                    CreateNoWindow = false,
-                    WorkingDirectory = Environment.CurrentDirectory
+                    RedirectStandardInput = false,
+                    RedirectStandardOutput = true,
+                    RedirectStandardError = true,
+                    WorkingDirectory = Environment.CurrentDirectory,
+                    UseShellExecute = false
                 }
             };
+        }
+
+        public static bool IsInstalled()
+        {
+            var isInstalled = false;
+
+            try
+            {
+                Process.StartInfo.Arguments = "--version";
+                Process.Start();
+
+                if (!Process.WaitForExit(3000))
+                    Process.Kill();
+
+                isInstalled = Process.ExitCode == 0;
+            }
+            catch
+            {
+                // ignored
+            }
+
+            return isInstalled;
         }
 
         public static bool IsRepository()
@@ -30,7 +55,10 @@ namespace GitHooks
             {
                 Process.StartInfo.Arguments = "log -1";
                 Process.Start();
-                Process.WaitForExit();
+
+                if (!Process.WaitForExit(3000))
+                    Process.Kill();
+
                 isRepository = Process.ExitCode == 0;
             }
             catch
@@ -49,8 +77,11 @@ namespace GitHooks
             {
                 Process.StartInfo.Arguments = "rev-parse --show-toplevel";
                 Process.Start();
+
+                if (!Process.WaitForExit(3000))
+                    Process.Kill();
+
                 path = Process.StandardOutput.ReadToEnd().Trim();
-                Process.WaitForExit();
             }
             catch
             {
@@ -68,8 +99,11 @@ namespace GitHooks
             {
                 Process.StartInfo.Arguments = $"config {key}";
                 Process.Start();
+
+                if (!Process.WaitForExit(3000))
+                    Process.Kill();
+
                 value = Process.StandardOutput.ReadToEnd().Trim();
-                Process.WaitForExit();
             }
             catch
             {
@@ -85,7 +119,9 @@ namespace GitHooks
             {
                 Process.StartInfo.Arguments = $"config {key} {value}";
                 Process.Start();
-                Process.WaitForExit();
+
+                if (!Process.WaitForExit(3000))
+                    Process.Kill();
             }
             catch
             {
@@ -99,7 +135,9 @@ namespace GitHooks
             {
                 Process.StartInfo.Arguments = $"config --unset {key}";
                 Process.Start();
-                Process.WaitForExit();
+
+                if (!Process.WaitForExit(3000))
+                    Process.Kill();
             }
             catch
             {

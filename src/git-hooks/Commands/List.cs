@@ -13,12 +13,6 @@ namespace GitHooks.Commands
 
         public int Execute(Context context)
         {
-            if (!Git.IsRepository())
-            {
-                Output.WriteLine("fatal: not a git repository (or any of the parent directories)");
-                return 1;
-            }
-
             Output.WriteLine("");
 
             foreach (var hook in Git.GetHooks())
