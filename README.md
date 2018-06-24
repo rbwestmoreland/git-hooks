@@ -27,9 +27,9 @@ A command line tool to manage [git hooks](https://git-scm.com/docs/githooks).
 
 Open a shell or command prompt and run the following commands:
 
-> `git --version`
+`git --version`
 
-> `bash -c "echo I have bash installed!"`
+`bash -c "echo I have bash installed!"`
 
 ### Linux / OSX
 
@@ -43,9 +43,27 @@ curl -s https://raw.githubusercontent.com/rbwestmoreland/git-hooks/master/instal
 (new-object Net.WebClient).DownloadString("https://raw.githubusercontent.com/rbwestmoreland/git-hooks/master/install/install.ps1") | iex
 ```
 
-### Uninstall
+## Usage
+
+### `git hooks install`
+
+Run this command in any git repository to enable `git-hooks`. Once executed, you will have a new `.githooks` directory in the root of you git repository. See [directory structure](#directory-structure) for more information.
+
+### `git hooks list`
+
+This command lists all the known scripts in your repository and user `.githooks` directories. It will also list the scripts in the order they will be executed.
+
+### `git hooks run <hook> [args]`
+
+This command allows you to execute a hook manually (e.g. `git hooks run pre-commit`). This command is helpful when developing a new script.
+
+### `git hooks uninstall`
 
 You can run `git hooks uninstall` at anytime. This will revent to using the default `.git/hooks` directory. The generated `.githooks` directories in your repository and user directory will remain untouched. You can manually delete these, if you no longer wish to keep them.
+
+### `git hooks help`
+
+This command lists all the available commands and options.
 
 ## Directory Structure
 
