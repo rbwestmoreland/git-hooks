@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 
 namespace GitHooks
 {
@@ -57,7 +58,20 @@ namespace GitHooks
                 return path;
             }
 
-            public static IEnumerable<string> GetRepositoryFiles(string hook)
+            public static IEnumerable<string> GetAllFiles(string hook)
+            {
+                foreach (var file in GetRepositoryFiles(hook))
+                {
+                    yield return file;
+                }
+
+                foreach (var file in GetUserProfileFiles(hook))
+                {
+                    yield return file;
+                }
+            }
+
+            private static IEnumerable<string> GetRepositoryFiles(string hook)
             {
                 var directory = GetRepositoryPath();
                 var subfolder = Path.Combine(directory, hook);
@@ -71,7 +85,7 @@ namespace GitHooks
                 }
             }
 
-            public static IEnumerable<string> GetUserProfileFiles(string hook)
+            private static IEnumerable<string> GetUserProfileFiles(string hook)
             {
                 var directory = GetUserProfilePath();
                 var subfolder = Path.Combine(directory, hook);

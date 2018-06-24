@@ -17,12 +17,7 @@ namespace GitHooks.Commands
 
             foreach (var hook in Git.GetHooks())
             {
-                foreach (var file in Paths.Hooks.GetRepositoryFiles(hook))
-                {
-                    Output.WriteLine($"[{hook}] {file}");
-                }
-
-                foreach (var file in Paths.Hooks.GetUserProfileFiles(hook))
+                foreach (var file in Paths.Hooks.GetAllFiles(hook))
                 {
                     Output.WriteLine($"[{hook}] {file}");
                 }

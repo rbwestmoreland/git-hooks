@@ -16,28 +16,32 @@ namespace GitHooks.Commands
             var exit = 0;
             var hook = context.Args.ElementAtOrDefault(1);
             var args = context.Args.ElementAtOrDefault(2);
+            var files = Paths.Hooks.GetAllFiles(hook).ToArray();
+
+            if (!files.Any())
+                return exit;
 
             Output.WriteLine("");
 
-            foreach (var file in Paths.Hooks.GetRepositoryFiles(hook))
+            foreach (var file in files)
             {
-                exit = Math.Max(exit, ExecuteHook(file, args));
-            }
+                Output.WriteLine($"[{file}]");
 
-            foreach (var file in Paths.Hooks.GetUserProfileFiles(hook))
-            {
-                exit = Math.Max(exit, ExecuteHook(file, args));
+                var lastExitCode = Bash.ExecuteScript(file, args, Output.WriteLine);
+                exit = GetNewExitCode(exit, lastExitCode);
+
+                Output.WriteLine("");
             }
 
             return exit;
         }
 
-        private static int ExecuteHook(string file, string args)
+        private static int GetNewExitCode(int currExitCode, int lastExitCode)
         {
-            Output.WriteLine($"[{file}]");
-            var exitCode = Bash.ExecuteScript(file, args, Output.WriteLine);
-            Output.WriteLine("");
-            return exitCode;
+            if (lastExitCode == 0)
+                return currExitCode;
+
+            return currExitCode == 0 ? lastExitCode : Math.Max(currExitCode, lastExitCode);
         }
     }
 }
