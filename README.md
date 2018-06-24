@@ -15,7 +15,9 @@ A command line tool to manage [git hooks](https://git-scm.com/docs/githooks).
 * [Contributing](#contributing)
 * [License](#license)
 
-## Requirements
+## Install
+
+### Requirements
 
 `git-hooks` requires `bash` and `git` to be installed and availabe in your `PATH`.
 
@@ -29,17 +31,17 @@ Open a shell or command prompt and run the following commands:
 
 > `bash -c "echo I have bash installed!"`
 
-## Install
-
-`git-hooks` works on Linux, OSX, and Windows.
-
 ### Linux / OSX
 
-`curl -s https://raw.githubusercontent.com/rbwestmoreland/git-hooks/master/install/install.sh | sudo bash`
+```shell
+curl -s https://raw.githubusercontent.com/rbwestmoreland/git-hooks/master/install/install.sh | sudo bash
+```
 
 ### Windows
 
-`(new-object Net.WebClient).DownloadString("https://raw.githubusercontent.com/rbwestmoreland/git-hooks/master/install/install.ps1") | iex`
+```powershell
+(new-object Net.WebClient).DownloadString("https://raw.githubusercontent.com/rbwestmoreland/git-hooks/master/install/install.ps1") | iex
+```
 
 ### Uninstall
 
