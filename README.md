@@ -2,8 +2,6 @@
 
 A command line tool to manage [git hooks](https://git-scm.com/docs/githooks).
 
-<hr/>
-
 ## Table of Contents
 
 * [Requirements](#requirements)
@@ -16,8 +14,6 @@ A command line tool to manage [git hooks](https://git-scm.com/docs/githooks).
   * [Order of Execution](#order-of-execution)
 * [Contributing](#contributing)
 * [License](#license)
-
-<hr/>
 
 ## Requirements
 
@@ -104,11 +100,11 @@ All scripts will execute, reguardless of the outcome of the previous script. The
 
 As I use this for my own projects, I know this might not be the perfect approach
 for all the projects out there. If you have any ideas, just
-[open an issue](issues) and tell me what you think.
+[open an issue](https://github.com/rbwestmoreland/git-hooks/issues/new) and tell me what you think.
 
 If you'd like to contribute, please fork the repository and make changes as
 you'd like. Pull requests are welcomed.
 
 ## License
 
-This project is licensed under the [MIT](LICENSE) license.
+This project is licensed under the [MIT](LICENSE.md) license.
