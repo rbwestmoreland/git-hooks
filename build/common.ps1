@@ -16,3 +16,7 @@ Function Get-ProjectVersion {
     $csproj = Get-ProjectPath
     return ([xml](Get-Content $csproj)).Project.PropertyGroup.Version
 }
+
+Function Get-WslPath($Path) {
+    return $(bash -c "wslpath -a '$Path'")
+}
