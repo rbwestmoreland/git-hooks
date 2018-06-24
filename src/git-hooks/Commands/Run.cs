@@ -19,12 +19,12 @@ namespace GitHooks.Commands
 
             Output.WriteLine("");
 
-            foreach (var file in Paths.Hooks.GetRepositoryFiles(hook, Paths.Format.Absolute))
+            foreach (var file in Paths.Hooks.GetRepositoryFiles(hook))
             {
                 exit = Math.Max(exit, ExecuteHook(file, args));
             }
 
-            foreach (var file in Paths.Hooks.GetUserProfileFiles(hook, Paths.Format.Absolute))
+            foreach (var file in Paths.Hooks.GetUserProfileFiles(hook))
             {
                 exit = Math.Max(exit, ExecuteHook(file, args));
             }

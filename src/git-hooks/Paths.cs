@@ -5,22 +5,26 @@ namespace GitHooks
 {
     internal static class Paths
     {
-        public enum Format
+        private static string GetNormalizedPath(string value)
         {
-            Absolute,
-            Relative
+            var path = Path.GetFullPath(value);
+            return path;
         }
 
         public static class Environment
         {
             public static string GetUserProfilePath()
             {
-                return System.Environment.GetFolderPath(System.Environment.SpecialFolder.UserProfile);
+                var path = System.Environment.GetFolderPath(System.Environment.SpecialFolder.UserProfile);
+                path = GetNormalizedPath(path);
+                return path;
             }
 
             public static string GetGitRootPath()
             {
-                return Git.GetRootPath();
+                var path = Git.GetRootPath();
+                path = GetNormalizedPath(path);
+                return path;
             }
         }
 
@@ -30,6 +34,7 @@ namespace GitHooks
             {
                 var gitRoot = Git.GetRootPath();
                 var path = Path.Combine(gitRoot, ".git", ".githooks");
+                path = GetNormalizedPath(path);
                 return path;
             }
         }
@@ -40,6 +45,7 @@ namespace GitHooks
             {
                 var profile = Environment.GetUserProfilePath();
                 var path = Path.Combine(profile, ".githooks");
+                path = GetNormalizedPath(path);
                 return path;
             }
 
@@ -47,12 +53,12 @@ namespace GitHooks
             {
                 var gitRoot = Git.GetRootPath();
                 var path = Path.Combine(gitRoot, ".githooks");
+                path = GetNormalizedPath(path);
                 return path;
             }
 
-            public static IEnumerable<string> GetRepositoryFiles(string hook, Format format)
+            public static IEnumerable<string> GetRepositoryFiles(string hook)
             {
-                var gitRoot = Environment.GetGitRootPath();
                 var directory = GetRepositoryPath();
                 var subfolder = Path.Combine(directory, hook);
 
@@ -61,13 +67,12 @@ namespace GitHooks
 
                 foreach (var file in Directory.EnumerateFiles(subfolder))
                 {
-                    yield return format == Format.Absolute ? file : file.Replace(gitRoot, ".");
+                    yield return GetNormalizedPath(file);
                 }
             }
 
-            public static IEnumerable<string> GetUserProfileFiles(string hook, Format format)
+            public static IEnumerable<string> GetUserProfileFiles(string hook)
             {
-                var userProfile = Environment.GetUserProfilePath();
                 var directory = GetUserProfilePath();
                 var subfolder = Path.Combine(directory, hook);
 
@@ -76,7 +81,7 @@ namespace GitHooks
 
                 foreach (var file in Directory.EnumerateFiles(subfolder))
                 {
-                    yield return format == Format.Absolute ? file : file.Replace(userProfile, "~");
+                    yield return GetNormalizedPath(file);
                 }
             }
         }
