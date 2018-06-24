@@ -35,11 +35,11 @@ Open a shell or command prompt and run the following commands:
 
 ### Linux / OSX
 
-> Comming Soon
+`curl -s https://raw.githubusercontent.com/rbwestmoreland/git-hooks/master/install/install.sh | sudo bash`
 
 ### Windows
 
-> Comming Soon
+`(new-object Net.WebClient).DownloadString("https://raw.githubusercontent.com/rbwestmoreland/git-hooks/master/install/install.ps1") | iex`
 
 ### Uninstall
 
