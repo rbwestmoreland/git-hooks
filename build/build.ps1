@@ -8,7 +8,7 @@ if (!$PSScriptRoot) { $PSScriptRoot = Split-Path $script:MyInvocation.MyCommand.
 $artifact_dir = Get-ArtifactDirectory
 $csproj = Get-ProjectPath
 $version = Get-ProjectVersion
-$distros = @("win-x64")
+$distros = @("win-x64", "linux-x64", "osx-x64")
 
 # script
 Write-Output "----------------------------"
