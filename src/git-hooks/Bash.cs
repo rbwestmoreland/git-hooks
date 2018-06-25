@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 using System.IO;
+using System.Runtime.InteropServices;
 
 namespace GitHooks
 {
@@ -16,7 +17,7 @@ namespace GitHooks
                 {
                     CreateNoWindow = true,
                     ErrorDialog = false,
-                    FileName = "bash",
+                    FileName = GetBashPath(),
                     RedirectStandardInput = false,
                     RedirectStandardOutput = true,
                     RedirectStandardError = true,
@@ -48,7 +49,19 @@ namespace GitHooks
             return isInstalled;
         }
 
+        public static int ExecuteCommand(string command, Action<string> onOutput)
+        {
+            var bash = $"-c \"{command}\"";
+            return Execute(bash, onOutput);
+        }
+
         public static int ExecuteScript(string script, string arguments, Action<string> onOutput)
+        {
+            var bash = $"{GetUnixPath(script)} {arguments}";
+            return Execute(bash, onOutput);
+        }
+
+        private static int Execute(string arguments, Action<string> onOutput)
         {
             var exitCode = -1;
             var onDataReceived = new DataReceivedEventHandler((sender, args) =>
@@ -59,7 +72,7 @@ namespace GitHooks
 
             try
             {
-                Process.StartInfo.Arguments = $"-c \"sh {GetBashPath(script)} {arguments}\"";
+                Process.StartInfo.Arguments = arguments;
                 Process.Start();
 
                 Process.OutputDataReceived += onDataReceived;
@@ -86,7 +99,19 @@ namespace GitHooks
             return exitCode;
         }
 
-        private static string GetBashPath(string script)
+        private static string GetBashPath()
+        {
+            if (!RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+                return "bash";
+
+            var shell = Environment.GetEnvironmentVariable("SHELL");
+            if (shell != null && shell.EndsWith("bash.exe"))
+                return shell;
+
+            return "bash";
+        }
+
+        private static string GetUnixPath(string script)
         {
             return Path.GetRelativePath(Environment.CurrentDirectory, script).Replace('\\', '/');
         }
