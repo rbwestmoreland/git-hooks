@@ -1,3 +1,5 @@
+$ErrorAction
+
 # init
 if (!$PSScriptRoot) { $PSScriptRoot = Split-Path $script:MyInvocation.MyCommand.Path }
 
@@ -34,7 +36,8 @@ foreach ($distro in $distros) {
     Write-Output "--------------------------------------"
     $output = "$artifacts/$distro"
     $compress_path = "$artifacts/git-hooks-v$version-$distro"
-    dotnet publish $csproj -c "Release" -r "$distro" -o $output --self-contained
+    dotnet publish $csproj -c "Release" -r "$distro" -o $output -v quiet --self-contained
+    Write-Output "Success"
 
     Write-Output "--------------------------------------"
     Write-Output "Compressing $distro Artifacts (zip)"

@@ -6,10 +6,10 @@ if (!$PSScriptRoot) { $PSScriptRoot = Split-Path $script:MyInvocation.MyCommand.
 
 # vars
 $version = Get-ProjectVersion
-$zipFile = "$PSScriptRoot\artifacts\v$version\git-hooks-v$version-win-x64.zip"
+$zipFile = "$PSScriptRoot\artifacts\git-hooks-v$version-win-x64.zip"
 
 # uninstall and install
-$installationFolder = Join-Path $env:ProgramData "rbwestmoreland\git-hooks\v$version"
+$installationFolder = Join-Path $env:ProgramData "rbwestmoreland\git-hooks"
 Remove-Item $installationFolder -Recurse -Force -ErrorAction SilentlyContinue
 Microsoft.PowerShell.Archive\Expand-Archive $zipFile -DestinationPath $installationFolder -Force
 
