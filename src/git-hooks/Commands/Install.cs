@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
+using System.Text;
 
 namespace GitHooks.Commands
 {
@@ -39,27 +40,28 @@ namespace GitHooks.Commands
 
         private static void CreateRepositoryDirectory()
         {
-            var directory = Paths.Hooks.GetRepositoryPath();
-            if (!Directory.Exists(directory))
-                Directory.CreateDirectory(directory);
-
-            foreach (var hook in Git.GetHooks())
-            {
-                var subfolder = Path.Combine(directory, hook);
-                if (!Directory.Exists(subfolder))
-                    Directory.CreateDirectory(subfolder);
-            }
+            var path = Paths.Hooks.GetRepositoryPath();
+            CreateDirectory(path);
         }
 
         private static void CreateUserDirectory()
         {
-            var directory = Paths.Hooks.GetUserProfilePath();
-            if (!Directory.Exists(directory))
-                Directory.CreateDirectory(directory);
+            var path = Paths.Hooks.GetUserProfilePath();
+            CreateDirectory(path);
+        }
+
+        private static void CreateDirectory(string path)
+        {
+            if (!Directory.Exists(path))
+                Directory.CreateDirectory(path);
+
+            var gitattributes = Path.Combine(path, ".gitattributes");
+            if (!File.Exists(gitattributes))
+                File.WriteAllText(gitattributes, "* text eol=lf", new UTF8Encoding(false));
 
             foreach (var hook in Git.GetHooks())
             {
-                var subfolder = Path.Combine(directory, hook);
+                var subfolder = Path.Combine(path, hook);
                 if (!Directory.Exists(subfolder))
                     Directory.CreateDirectory(subfolder);
             }
