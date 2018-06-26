@@ -3,4 +3,7 @@ if (!$PSScriptRoot) { $PSScriptRoot = Split-Path $script:MyInvocation.MyCommand.
 
 # imports
 . $PSScriptRoot\build.ps1
-. $PSScriptRoot\install.ps1
+
+if ($LASTEXITCODE -eq 0) {
+    . $PSScriptRoot\install.ps1
+}

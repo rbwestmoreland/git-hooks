@@ -12,6 +12,11 @@ Function Get-ProjectPath {
     return "$script_dir\..\src\git-hooks\git-hooks.csproj"
 }
 
+Function Get-TestProjectPath {
+    $script_dir = Get-ScriptDirectory
+    return "$script_dir\..\src\git-hooks.tests\git-hooks.tests.csproj"
+}
+
 Function Get-ProjectVersion {
     $csproj = Get-ProjectPath
     return ([xml](Get-Content $csproj)).Project.PropertyGroup.Version
