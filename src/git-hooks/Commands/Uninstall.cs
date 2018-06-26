@@ -1,19 +1,16 @@
-﻿using System;
-using System.IO;
-using System.Linq;
+﻿using System.IO;
 
 namespace GitHooks.Commands
 {
-    internal class Uninstall : ICommand
+    internal class Uninstall : Command
     {
-        public bool IsMatch(Context context)
-        {
-            var command = context.Args.ElementAtOrDefault(0);
-            return string.Equals("uninstall", command, StringComparison.OrdinalIgnoreCase);
-        }
+        public override bool IsMatch(Context context) => IsMatch(context, "uninstall");
 
-        public int Execute(Context context)
+        public override int Execute(Context context)
         {
+            if (!CheckPrerequisites())
+                return 1;
+
             DeleteGitDirectory();
             Git.UnsetConfig("core.hooksPath");
 

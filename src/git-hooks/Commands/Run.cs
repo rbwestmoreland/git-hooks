@@ -3,25 +3,30 @@ using System.Linq;
 
 namespace GitHooks.Commands
 {
-    internal class Run : ICommand
+    internal class Run : Command
     {
-        public bool IsMatch(Context context)
-        {
-            var command = context.Args.ElementAtOrDefault(0);
-            return string.Equals("run", command, StringComparison.OrdinalIgnoreCase);
-        }
+        public override bool IsMatch(Context context) => IsMatch(context, "run");
 
-        public int Execute(Context context)
+        public override int Execute(Context context)
         {
-            var exit = 0;
+            if (!CheckPrerequisites())
+                return 1;
+
             var hook = context.Args.ElementAtOrDefault(1);
-            var args = context.Args.ElementAtOrDefault(2);
-            var files = Paths.Hooks.GetAllFiles(hook).ToArray();
+            if (string.IsNullOrWhiteSpace(hook))
+            {
+                Output.WriteLine("fatal: missing required argument 'hook'");
+                return 1;
+            }
 
+            var files = Paths.Hooks.GetAllFiles(hook).ToArray();
             if (!files.Any())
-                return exit;
+                return 0;
 
             Output.WriteLine("");
+
+            var exit = 0;
+            var args = GetScriptArguments(context);
 
             foreach (var file in files)
             {
@@ -36,12 +41,24 @@ namespace GitHooks.Commands
             return exit;
         }
 
+        private static string GetScriptArguments(Context context)
+        {
+            var hook = context.Args.ElementAt(1);
+            var index = Environment.CommandLine.IndexOf(hook, StringComparison.Ordinal) + hook.Length + 1;
+            var arguments = Environment.CommandLine.Length > index ? Environment.CommandLine.Substring(index) : string.Empty;
+            return arguments;
+        }
+
         private static int GetNewExitCode(int currExitCode, int lastExitCode)
         {
             if (lastExitCode == 0)
                 return currExitCode;
 
-            return currExitCode == 0 ? lastExitCode : Math.Max(currExitCode, lastExitCode);
+            if (currExitCode == 0)
+                return lastExitCode;
+
+            var newExitCode = Math.Max(currExitCode, lastExitCode);
+            return newExitCode;
         }
     }
 }
