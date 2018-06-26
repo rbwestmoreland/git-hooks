@@ -58,7 +58,7 @@ namespace GitHooks
         public static int ExecuteScript(string script, string arguments, Action<string> onOutput)
         {
             var bash = $"{GetUnixPath(script)} {arguments}";
-            return Execute(bash, onOutput);
+            return ExecuteCommand(bash, onOutput);
         }
 
         private static int Execute(string arguments, Action<string> onOutput)
