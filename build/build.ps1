@@ -60,7 +60,7 @@ foreach ($distro in $distros) {
     Write-Output "--------------------------------------"
     $wsl_output = Get-WslPath($output)
     $wsl_tar_path = Get-WslPath("$compress_path.tar.gz")
-    bash -c "tar -zcf $wsl_tar_path --directory=$wsl_output ."
+    Invoke-Bash("tar -zcf $wsl_tar_path --directory=$wsl_output .")
     Write-Output "Success"
     Write-Output ""
 

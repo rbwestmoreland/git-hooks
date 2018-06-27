@@ -40,6 +40,7 @@ namespace GitHooks.Commands
         {
             var path = Paths.Hooks.GetRepositoryPath();
             CreateDirectory(path);
+            CreateInstallScripts(path);
         }
 
         private static void CreateUserDirectory()
@@ -63,6 +64,27 @@ namespace GitHooks.Commands
                 if (!Directory.Exists(subfolder))
                     Directory.CreateDirectory(subfolder);
             }
+        }
+
+        private static void CreateInstallScripts(string path)
+        {
+            if (!Directory.Exists(path))
+                Directory.CreateDirectory(path);
+
+            var shellScriptPath = Path.Combine(path, "enable.sh");
+            var shellScriptBuilder = new StringBuilder();
+            shellScriptBuilder.Append("#!/usr/bin/env bash\n");
+            shellScriptBuilder.Append("curl -s https://raw.githubusercontent.com/rbwestmoreland/git-hooks/master/install/install.sh | bash\n");
+            shellScriptBuilder.Append("git hooks install");
+            File.WriteAllText(shellScriptPath, shellScriptBuilder.ToString(), new UTF8Encoding(false));
+
+            var powershellScriptPath = Path.Combine(path, "enable.ps1");
+            var powershellScriptBuilder = new StringBuilder();
+            powershellScriptBuilder.AppendLine("$script = (new-object Net.WebClient).DownloadString(\"https://raw.githubusercontent.com/rbwestmoreland/git-hooks/master/install/install.ps1\")");
+            powershellScriptBuilder.AppendLine("Invoke-Expression $script");
+            powershellScriptBuilder.AppendLine("$env:Path = [System.Environment]::GetEnvironmentVariable(\"Path\", \"Machine\") + \";\" + [System.Environment]::GetEnvironmentVariable(\"Path\", \"User\")");
+            powershellScriptBuilder.AppendLine("git hooks install");
+            File.WriteAllText(powershellScriptPath, powershellScriptBuilder.ToString(), new UTF8Encoding(false));
         }
     }
 }

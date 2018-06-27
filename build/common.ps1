@@ -22,6 +22,10 @@ Function Get-ProjectVersion {
     return ([xml](Get-Content $csproj)).Project.PropertyGroup.Version
 }
 
+Function Invoke-Bash ($Command) {
+    return $(C:\Windows\System32\bash.exe -c "$Command") 
+}
+
 Function Get-WslPath($Path) {
-    return $(bash -c "wslpath -a '$Path'")
+    return Invoke-Bash("wslpath -a '$Path'")
 }

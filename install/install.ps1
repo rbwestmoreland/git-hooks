@@ -9,7 +9,6 @@ $latestRelease = Invoke-WebRequest "https://api.github.com/repos/rbwestmoreland/
 $tag = $latestRelease.tag_name
 
 # Download the zip
-Write-Host "Installing latest version ($tag)..." -NoNewline
 $client = New-Object "System.Net.WebClient"
 $url = "https://github.com/rbwestmoreland/git-hooks/releases/download/$tag/git-hooks-$tag-win-x64.zip"
 $zipFile = Join-Path $tempFolder "git-hooks.zip"
@@ -18,7 +17,7 @@ $client.DownloadFile($url, $zipFile)
 # Unzip to Install Directory
 $installationFolder = Join-Path $env:ProgramData "rbwestmoreland\git-hooks"
 Remove-Item $installationFolder -Recurse -Force -ErrorAction SilentlyContinue
-Microsoft.PowerShell.Archive\Expand-Archive $zipFile -DestinationPath $installationFolder -Force
+Expand-Archive $zipFile -DestinationPath $installationFolder -Force
 Remove-Item $tempFolder -Recurse -Force
 
 # Update PATH
@@ -27,7 +26,4 @@ $paths = $path.Split(";") -inotlike "*rbwestmoreland\git-hooks*"
 $paths += $installationFolder
 $path = $paths -join ";"
 [System.Environment]::SetEnvironmentVariable("path", $path, [System.EnvironmentVariableTarget]::User)
-
-# Success
-Write-Host "Success." -ForegroundColor Green
-Write-Host "You PATH environment variable has been updated. Please restart any open shells." -ForegroundColor Yellow
+$env:Path = [System.Environment]::GetEnvironmentVariable("Path", "Machine") + ";" + [System.Environment]::GetEnvironmentVariable("Path", "User")

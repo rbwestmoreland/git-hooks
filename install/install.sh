@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 # Detect OS
 if [ "$(uname)" == "Darwin" ]; then
